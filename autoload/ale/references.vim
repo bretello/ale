@@ -71,10 +71,15 @@ function! ale#references#FormatLSPResponseItem(response_item, options) abort
         \ 'col': a:response_item.range.start.character + 1,
         \}
     else
+        let l:line= a:response_item.range.start.line
+        let l:col = a:response_item.range.start.character
+        let l:file =  ale#util#ToResource(a:response_item.uri)
+        let l:line_text = readfile(l:file)[l:line]
         return {
-        \ 'filename': ale#util#ToResource(a:response_item.uri),
-        \ 'line': a:response_item.range.start.line + 1,
-        \ 'column': a:response_item.range.start.character + 1,
+        \ 'filename': l:file,
+        \ 'line': l:line + 1,
+        \ 'column': l:col + 1,
+        \ 'match': l:line_text[l:col:],
         \}
     endif
 endfunction
